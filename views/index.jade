@@ -1,5 +1,26 @@
-extends layout
+doctype html
+html
 
-block content
-  h1= title
-  p Welcome to #{title}
+  head
+    title= title
+    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css')
+
+  body
+    .navbar.navbar-fixed-top(role='navigation')
+      .container-fluid
+        .nav.navbar-right
+          form(class='navbar-form' method='get', action='/login', id='login')
+            input(class='btn navbar-btn' value='Login' type='submit')
+    .container(style='margin-top: 10%')
+      .text-center
+        img(src='logo.png')
+      .row(style='margin-top: 4%')
+        .col-md-2
+        .col-md-8
+          form(method='get', action='/search', id='search')
+            .col-md-10
+              input.form-control(id='search_text', name='search_text', placeholder='Search by City/State or Zipcode')
+            .col-md-2
+              input.form-control(class='btn' style='background-color: #4285f4; color: #fff' type='submit' value='Search')
+        .col-md-2
