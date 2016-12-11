@@ -1,0 +1,23 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+  body
+    .container
+      .row
+        .col-md-4
+        .col-md-4
+          h1 Please register
+          br
+          form.form-signin(method='post', action='/register', id='registerForm', style='')
+            .form-group
+              label(for='email') Email Address
+              input(class='form-control', id='email', type='text', name='email', placeholder='Enter your email', required)
+            .form-group
+              label(for='password') Password
+              input(class='form-control', id='password', type='password', name='password', required)
+            input(class='btn btn-block btn-blue' type='submit', value='Register')
+        .col-md-4
