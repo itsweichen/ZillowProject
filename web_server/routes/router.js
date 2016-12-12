@@ -2,6 +2,7 @@ var express = require('express');
 var passwordHash = require('password-hash');
 var session = require('client-sessions');
 var User = require('../model/user');
+var rpc_client = require('../rpc_client/rpc_client');
 
 var router = express.Router();
 
@@ -11,6 +12,24 @@ TITLE = 'Smart Zillow';
 router.get('/', function(req, res, next) {
   var user = checkLoggedIn(req);
   res.render('index', {title: TITLE, logged_in_user: user});
+});
+
+// search
+router.get('/search', function(req, res, next) {
+  var query = req.query.search_text; //req.query returns a json
+  console.log("search text: " + query);
+
+  rpc_client.search(query, function(response) {
+    if (response == undefined || response === null) {
+      console.log("No results found.");
+    }
+
+    res.render('search_result', {
+      title: TITLE,
+      query: query,
+      results: response
+    });
+  });
 });
 
 // Login page
