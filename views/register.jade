@@ -15,9 +15,16 @@ html
           form.form-signin(method='post', action='/register', id='registerForm', style='')
             .form-group
               label(for='email') Email Address
-              input(class='form-control', id='email', type='text', name='email', placeholder='Enter your email', required)
+              input(class='form-control', id='email', type='text', name='email', required)
             .form-group
               label(for='password') Password
               input(class='form-control', id='password', type='password', name='password', required)
+            - if (message)
+              div(class="alert alert-warning", role="alert")
+                = message
             input(class='btn btn-block btn-blue' type='submit', value='Register')
+            hr
+            .text-center
+              p Already have an account? Please log in 
+                a(href='/login') here
         .col-md-4

@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('client-sessions');
 
 var routes = require('./routes/router');
 
@@ -18,6 +19,14 @@ db.on('error', console.error.bind(console, 'connection error:'));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+// set session
+app.use(session({
+  cookieName: 'session',
+  secret: 'SDfdf344T5KLDFZcfdsery123dfzv',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000
+}));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

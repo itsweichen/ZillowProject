@@ -14,8 +14,17 @@ html
           br
           form.form-signin(method='post', action='/login', id='loginForm', style='')
             .form-group
-              input(class='form-control', id='email', type='text', name='email', placeholder='Enter your email', required)
+              label(for='email') Email Address
+              input(class='form-control', id='email', type='text', name='email', required)
             .form-group
+              label(for='password') Password
               input(class='form-control', id='password', type='password', name='password', required)
+            - if (message)
+              div(class="alert alert-warning", role="alert")
+                = message
             input(class='btn btn-block btn-blue' type='submit', value='Log in')
+            hr
+            .text-center
+              p Do not have an account? Please register 
+                a(href='/register') here
         .col-md-4

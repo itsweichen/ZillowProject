@@ -9,7 +9,8 @@ TITLE = 'Smart Zillow';
 
 // Index page
 router.get('/', function(req, res, next) {
-  res.render('index', {title: TITLE});
+  var user = checkLoggedIn(req);
+  res.render('index', {title: TITLE, logged_in_user: user});
 });
 
 // Login page
@@ -25,12 +26,12 @@ router.get('/register', function(req, res, next){
 // Register submit
 router.post('/register', function(req, res, next){
   var email = req.body.email; // according to [name]
-  var password = req.body.password;
+  var password = passwordHash.generate(req.body.password);
 
   User.find({email: email}, function(err, users) {
     if (err) throw err;
     if (users.length == 0) {
-      // if the email doesn't not exist
+      // if the email doesn't not exist, create new user
       var newUser = User({
         email: email,
         password: password
@@ -39,10 +40,14 @@ router.post('/register', function(req, res, next){
         if (err) throw err;
         req.session.user = email;
         res.redirect('/');
-
       });
     } else {
-      res.redirect('/'); // TODO
+      // TODO
+      // if false, render the page
+      res.render('register', {
+        title: TITLE,
+        message: 'Email already existed.'
+      });
     }
   });
 });
@@ -52,9 +57,42 @@ router.post('/login', function(req, res, next){
   var email = req.body.email;
   var password = req.body.password;
 
-
+  User.findOne({email: email}, function(err, user) {
+    if (err) throw err;
+    if (!user) {
+      // user not found
+      res.render('login', {
+        title: TITLE,
+        message: "User not found."
+      })
+    } else {
+      // user found
+      if (passwordHash.verify(password, user.password)) {
+        console.log(req.session);
+        req.session.user = user.email;
+        res.redirect('/');
+      } else {
+        res.render('login', {
+          title: TITLE,
+          message: "Password is incorrect."
+        });
+      }
+    }
+  });
 });
 
+// logout submit
+router.get('/logout', function(req, res, next) {
+  req.session.reset();
+  res.redirect('/');
+});
+
+function checkLoggedIn(req) {
+  if (req.session && req.session.user) {
+    return req.session.user;
+  }
+  return null;
+}
 
 
 module.exports = router;
