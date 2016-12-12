@@ -11,8 +11,12 @@ html
     .navbar.navbar-fixed-top(role='navigation')
       .container-fluid
         .nav.navbar-right
-          form(class='navbar-form' method='get', action='/login', id='login')
-            input(class='btn navbar-btn btn-blue' value='Login' type='submit')
+          if logged_in_user
+            form(method='get', action='/logout', id='login')
+              input(class='btn navbar-btn btn-blue' value='Log out' type='submit')
+          else
+            form(method='get', action='/login', id='login')
+              input(class='btn navbar-btn btn-blue' value='Log in' type='submit')
     .container(style='margin-top: 10%')
       .text-center
         img(src='logo.png')

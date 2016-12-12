@@ -12,6 +12,8 @@ var app = express();
 // connect to mongodb
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/smart');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
