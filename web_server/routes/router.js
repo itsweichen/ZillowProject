@@ -19,7 +19,7 @@ router.get('/search', function(req, res, next) {
   var query = req.query.search_text; //req.query returns a json
   console.log("search text: " + query);
 
-  rpc_client.search(query, function(response) {
+  rpc_client.searchArea(query, function(response) {
     if (response == undefined || response === null) {
       console.log("No results found.");
     }

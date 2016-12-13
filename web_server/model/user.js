@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
   email: {type: String, require: true, unique: true},
-  password: {type: String, required: true}, // can use passwordhash library
+  password: {type: String, required: true},
   created_at: Date,
   updated_at: Date
 });
