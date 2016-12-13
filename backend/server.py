@@ -18,10 +18,6 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
         print "search() gets called with text=[%s]" % text
         return operations.searchArea(text)
 
-    """
-    The following methods provide more way to fetch data.
-    """
-
     """Search properties by zip code"""
     @pyjsonrpc.rpcmethod
     def searchAreaByZip(self, zipcode):
@@ -34,17 +30,6 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
         print "searchAreaByCityState() gets called with city=[%s] and state=[%s]" % (city, state)
         return operations.searchAreaByCityState(city, state)
 
-    """Search a property with specific address and citystatezip"""
-    @pyjsonrpc.rpcmethod
-    def searchByAddress(self, address, citystatezip):
-        print "searchByAddress() gets called with address=[%s] and citystatezip=[%s]" % (address, citystatezip)
-        return operations.searchByAddress(address, citystatezip)
-
-    """Retrieve details by zillow property ID (zpid)"""
-    @pyjsonrpc.rpcmethod
-    def getDetailsByZpid(self, zpid):
-        print "getDetailsByZillowId() gets called with zpid=[%s]" % (zpid)
-        return operations.getDetailsByZpid(zpid)
 
 http_server = pyjsonrpc.ThreadingHttpServer(
     server_address = (SERVER_HOST, SERVER_PORT),
