@@ -32,6 +32,37 @@ router.get('/search', function(req, res, next) {
   });
 });
 
+// detail page
+router.get('/detail', function(req, res, next) {
+  logged_in_user = checkLoggedIn(req, res);
+
+  var id = req.query.id;
+  console.log("detail for id: " + id);
+
+  rpc_client.getDetailsByZpid(id, function(response) {
+    property = {}
+    if (response === undefined || response === null) {
+      console.log("No results found");
+    } else {
+      property = response;
+    }
+
+    // add thousands separator for numbers
+    addThousandSeparatorForSearchResult(property);
+
+    // split facts and additional facts
+    splitFacts(property, 'facts');
+    splitFacts(property, 'additional_facts');
+
+    res.render('detail', {
+      title: TITLE,
+      query: '',
+      logged_in_user: logged_in_user,
+      property: property
+    });
+  });
+});
+
 // Login page
 router.get('/login', function(req, res, next) {
   res.render('login', {title: TITLE});
@@ -113,5 +144,22 @@ function checkLoggedIn(req) {
   return null;
 }
 
+function addThousandSeparatorForSearchResult(searchResult) {
+  for (var i = 0; i < searchResult.length; i++) {
+    addThousandSeparator(searchResult[i]);
+  }
+}
+
+function addThousandSeparator(property) {
+  property['list_price'] = numberWithCommas(property['list_price']);
+  property['size'] = numberWithCommas(property['size']);
+  property['predicted_value'] = numberWithCommas(property['predicted_value'])
+}
+
+function numberWithCommas(x) {
+  if (x != null) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+}
 
 module.exports = router;
