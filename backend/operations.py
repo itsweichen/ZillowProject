@@ -23,6 +23,7 @@ SERVER_PORT = 4040
 
 PROPERTY_TABLE_NAME = 'property'
 
+# TODO: search by detailed address
 
 """Search properties in an area"""
 def searchArea(text):
