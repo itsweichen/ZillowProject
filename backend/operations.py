@@ -38,7 +38,7 @@ def searchArea(text):
 """Search properties by zip code"""
 def searchAreaByZipcode(zipcode):
     print "searchAreaByZipcode() gets called with zipcode=[%s]" % str(zipcode)
-    properties = findProperyByZipcode(zipcode) #rename
+    properties = findPropertyByZipcode(zipcode) #rename
     if len(properties) == 0:
         # cannot find in db, use scraper to fetch
         zpids = zillow_web_scraper_client.get_zpid_by_zipcode(zipcode) # rename
@@ -52,7 +52,7 @@ def searchAreaByZipcode(zipcode):
 """Search properties by city state"""
 def searchAreaByCityState(city, state):
     print "searchAreaByCityState() gets called with city=[%s] abd state=[%s]" % (city, state)
-    properties = findProperyByCityState(city, state)
+    properties = findPropertyByCityState(city, state)
     if len(properties) == 0:
         # cannot find in db, use scraper to fetch
         zpids = zillow_web_scraper_client.get_zpid_by_city_state() # rename
@@ -63,21 +63,33 @@ def searchAreaByCityState(city, state):
         storeUpdates(properties)
     return properties
 
+"""Get details by zpid"""
+def getDetailsByZpid(zpid):
+    print "getDetailsByZpid() gets called with zpid=[%s]" % str(zpid)
+    db = mongodb_client.getDB()
+    property_detail = json.loads(dumps(db[PROPERTY_TABLE_NAME].find_one({'zpid': zpid})))
+    if property_detail is None:
+        property_detail = zillow_web_scraper_client.get_property_by_zpid(zpid)
+    return property_detail
+
 """Find property by zipcode"""
-def findProperyByZipcode(zipcode):
+def findPropertyByZipcode(zipcode):
+    print "findPropertyByZipcode() gets called with zipcode=[%s]" % str(zipcode)
     db = mongodb_client.getDB()
     properties = list(db[PROPERTY_TABLE_NAME].find({'zipcode': zipcode, 'is_for_sale': True}))
-    return properties
+    # Trick: ObjectId is not JSON serializable
+    return json.loads(dumps(properties))
 
 """Find property by city state"""
-def findProperyByCityState(city, state):
+def findPropertyByCityState(city, state):
+    print "findPropertyByCityState() gets called with city=[%s] abd state=[%s]" % (city, state)
     db = mongodb_client.getDB()
     # use regexp to do case-insensitive search
     properties = list(db[PROPERTY_TABLE_NAME]\
                     .find({ 'city': re.compile(city, re.IGNORECASE),\
                             'state': re.compile(state, re.IGNORECASE),\
                             'is_for_sale': True}))
-    return properties
+    return json.loads(dumps(properties))
 
 """Update doc in db"""
 def storeUpdates(properties):

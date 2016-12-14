@@ -162,4 +162,14 @@ function numberWithCommas(x) {
   }
 }
 
+function splitFacts(property, field_name) {
+  // console.log("splitFacts: \n" + JSON.stringify(property));
+  facts_groups = [];
+  group_size = property[field_name].length / 3;
+  facts_groups.push(property[field_name].slice(0, group_size));
+  facts_groups.push(property[field_name].slice(group_size, group_size + group_size));
+  facts_groups.push(property[field_name].slice(group_size + group_size));
+  property[field_name] = facts_groups;
+}
+
 module.exports = router;

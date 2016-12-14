@@ -32,6 +32,11 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
         print "searchAreaByCityState() gets called with city=[%s] and state=[%s]" % (city, state)
         return operations.searchAreaByCityState(city, state)
 
+    """Get property details by zpid"""
+    @pyjsonrpc.rpcmethod
+    def getDetailsByZpid(self, zpid):
+        print "getDetailsByZpid() gets called with zpid=[%s]" % str(zpid)
+        return operations.getDetailsByZpid(zpid)
 
 http_server = pyjsonrpc.ThreadingHttpServer(
     server_address = (SERVER_HOST, SERVER_PORT),

@@ -20,11 +20,22 @@ function add(a, b, callback) {
 function searchArea(query, callback) {
   client.request('searchArea', [query], function(err, error, response) {
     if (err) throw err;
+    console.log("got response from searchArea");
+    callback(response);
+  });
+}
+
+// get property details
+function getDetailsByZpid(id, callback) {
+  client.request('getDetailsByZpid', [id], function(err, error, response) {
+    if (err) throw err;
+    console.log("got response from getDetailsByZpid");
     callback(response);
   });
 }
 
 module.exports = {
   add: add,
-  searchArea: searchArea
+  searchArea: searchArea,
+  getDetailsByZpid: getDetailsByZpid
 };

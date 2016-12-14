@@ -6,10 +6,14 @@ from lxml import html
 from urllib import pathname2url
 
 URL = '''http://www.zillow.com'''
+
+# Path
 SEARCH_FOR_SALE_PATH = '''homes/for_sale'''
 GET_PROPERTY_BY_ZPID_PATH = '''homes'''
+GET_SIMILAR_HOMES_FOR_SALE_PATH = '''homedetails'''
 
 # Pattern
+IMAGE_URL_REGEX_PATTERN = '"z_listing_image_url":"([^"]+)",'
 SIMILAR_HOMES_ZPID_REGEX_PATTERN ='\/(\d+)_zpid'
 
 # XPATH
@@ -69,7 +73,7 @@ def get_zpid_by_city_state(city, state):
 
 """ Get similar homes for sale """
 def get_similar_homes_for_sale_by_id(zpid):
-    request_url = '%s/%s_zpid' % (build_url(URL, GET_SIMILAR_HOMES_FOR_SALE_XPATH, str(zpid)))
+    request_url = '%s/%s_zpid' % (build_url(URL, GET_SIMILAR_HOMES_FOR_SALE_XPATH), str(zpid))
     raw_result = search_zillow(request_url, GET_SIMILAR_HOMES_FOR_SALE_XPATH)
     return [re.search(SIMILAR_HOMES_ZPID_REGEX_PATTERN, x).group(1) for x in raw_result]
 
@@ -94,7 +98,7 @@ def get_property_by_zpid(zpid):
     # city, state and zipcode
     city_state_zipcode = city = state = zipcode = None
     try:
-        city_state_zip = tree.xpath(GET_INFO_XPATH_FOR_CITY_STATE_ZIP)[0]
+        city_state_zipcode = tree.xpath(GET_INFO_XPATH_FOR_CITY_STATE_ZIP)[0]
         city = city_state_zipcode.split(',')[0].strip(', ')
         state = city_state_zipcode.split(',')[1].split(' ')[1].strip()
         zipcode = city_state_zipcode.split(',')[1].split(' ')[2].strip()

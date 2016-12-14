@@ -5,10 +5,10 @@ block content
     tr
       td(colspan="2", style="100%")
         div(style="float:left;")
-          if property.image_url == ""
-            img(src="/default.png", style="width:500px;")
+          if property.image_url == "" || property.image_url == null
+            img(src="/default.png", style="width:400px;")
           else
-            img(src= property.image_url, onerror="this.src='/default.jpg'", style="width:500px;")
+            img(src= property.image_url, onerror="this.src='/default.jpg'", style="width:400px;")
         div(style="float:left; margin-left:40px;")
           div(id="map", style="width:300px; height:300px;")
     tr
@@ -70,4 +70,10 @@ block content
 
         map.entities.push(pushpin);
     }
+    
+    function loadDefaultImg() {
+      console.log("error loading image. \n" + this);
+      this.src = '/default.png';
+    }
+    
   script(type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?branch=release&callback=loadMapScenario' async defer)
