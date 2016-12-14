@@ -3,8 +3,10 @@ import time
 import json
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
+
 import mongodb_client
 import zillow_web_scraper_client
+
 from cloudAMQP_client import CloudAMQPClient
 
 # RabbitMQ config
@@ -15,9 +17,12 @@ DATA_FETCHER_QUEUE_NAME = 'dataFetcherTaskQueue'
 PROPERTY_TABLE_NAME = 'property'
 
 # fetcher config
-FETCH_SIMILAR_PROPERTIES = False
+FETCH_SIMILAR_PROPERTIES = True
+
 SECONDS_IN_ONE_DAY = 3600 * 24
 SECONDS_IN_ONE_WEEK = SECONDS_IN_ONE_DAY * 24
+
+WAITING_TIME = 3
 
 cloudAMQP_client = CloudAMQPClient(CLOUD_AMQP_URL, DATA_FETCHER_QUEUE_NAME)
 
@@ -31,8 +36,9 @@ def handle_message(msg):
 
     zpid = task['zpid']
 
-    # scape the zillow for details
+    # scrape the zillow for details
     property_detail = zillow_web_scraper_client.get_property_by_zpid(zpid)
+    property_detail['last_update'] = time.time()
 
     # update db
     db = mongodb_client.getDB()
@@ -58,4 +64,4 @@ while True:
         msg = cloudAMQP_client.getDataFetcherTask()
         if msg is not None:
             handle_message(msg)
-        time.sleep(1)
+        time.sleep(WAITING_TIME)
