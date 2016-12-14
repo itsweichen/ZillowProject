@@ -8,7 +8,6 @@ import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 import mongodb_client
-import zillow_zpi_client
 import zillow_web_scraper_client
 
 from cloudAMQP_client import CloudAMQPClient

@@ -3,17 +3,14 @@ import random
 
 from lxml import html
 from urllib import pathname2url
-    request_url = '%s/%s' % (build_url(URL, SEARCH_FOR_SALE_PATH), city_state)
-    raw_result = search_zillow(request_url, SEARCH_XPATH_FOR_ZPID)
 
-""" Get similar homes for sale """
-def get_similar_homes_for_sale_by_id
 URL = '''http://www.zillow.com'''
 SEARCH_FOR_SALE_PATH = '''homes/for_sale'''
 GET_PROPERTY_BY_ZPID_PATH = '''homes'''
 
 # Pattern
 SIMILAR_HOMES_ZPID_REGEX_PATTERN ='\/(\d+)_zpid'
+
 # XPATH
 SEARCH_XPATH_FOR_ZPID = '''//div[@id='list-results']/div[@id='search-results']/ul[@class='photo-cards']/li/article/@id'''
 GET_INFO_XPATH_FOR_STREET_ADDR = '''//header[@class='zsg-content-header addr']/h1[@class='notranslate']/text()'''
@@ -71,7 +68,7 @@ def get_zpid_by_city_state(city, state):
 
 """ Get similar homes for sale """
 def get_similar_homes_for_sale_by_id(zpid):
-    request_url = '%s/%s_zpid' % (build_url(URL, GET_SIMILAR_HOMES_FOR_SALE_XPATH, str(zpid))
+    request_url = '%s/%s_zpid' % (build_url(URL, GET_SIMILAR_HOMES_FOR_SALE_XPATH, str(zpid)))
     raw_result = search_zillow(request_url, GET_SIMILAR_HOMES_FOR_SALE_XPATH)
     return [re.search(SIMILAR_HOMES_ZPID_REGEX_PATTERN, x).group(1) for x in raw_result]
 

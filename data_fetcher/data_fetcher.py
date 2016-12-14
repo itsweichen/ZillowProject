@@ -39,6 +39,7 @@ def handle_message(msg):
     # scrape the zillow for details
     property_detail = zillow_web_scraper_client.get_property_by_zpid(zpid)
     property_detail['last_update'] = time.time()
+    print property_detail
 
     # update db
     db = mongodb_client.getDB()
