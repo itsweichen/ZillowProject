@@ -1,5 +1,6 @@
 import requests
 import random
+import re
 
 from lxml import html
 from urllib import pathname2url
@@ -192,7 +193,7 @@ def get_property_by_zpid(zpid):
         'bathroom': bathroom,
         'size': size,
         'latitude': latitude,
-        'longtitude': longtitude,
+        'longitude': longitude,
         'is_for_sale': is_for_sale,
         'list_price': list_price,
         'image_url': image_url,

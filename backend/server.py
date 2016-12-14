@@ -22,8 +22,8 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
 
     """Search properties by zip code"""
     @pyjsonrpc.rpcmethod
-    def searchAreaByZip(self, zipcode):
-        print "searchAreaByZip() gets called with zipcode=[%s]" % str(zipcode)
+    def searchAreaByZipcode(self, zipcode):
+        print "searchAreaByZipcode() gets called with zipcode=[%s]" % str(zipcode)
         return operations.searchAreaByZip(zipcode)
 
     """Search properties by city and state"""

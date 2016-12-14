@@ -1,7 +1,6 @@
 """
 changes
-    * rename "searchAreaByZip" -> "getZpidByZip"
-    * rename "searchAreaByCityState" -> "getZpidByCityState"
+    * rename
     * TODO: use multithreading to add searched properties to the queue
 """
 
@@ -29,7 +28,7 @@ PROPERTY_TABLE_NAME = 'property'
 def searchArea(text):
     properties = []
     if text.isdigit():
-        properties = searchAreaByZip(text)
+        properties = searchAreaByZipcode(text)
     else:
         city = text.split(',')[0].strip()
         state = text.split(', ')[1].strip()
@@ -38,11 +37,11 @@ def searchArea(text):
 
 """Search properties by zip code"""
 def searchAreaByZipcode(zipcode):
-    print "searchAreaByZip() gets called with zipcode=[%s]" % str(zipcode)
+    print "searchAreaByZipcode() gets called with zipcode=[%s]" % str(zipcode)
     properties = findProperyByZipcode(zipcode) #rename
     if len(properties) == 0:
         # cannot find in db, use scraper to fetch
-        zpids = zillow_web_scraper_client.get_zpid_by_zipcode() # rename
+        zpids = zillow_web_scraper_client.get_zpid_by_zipcode(zipcode) # rename
         for zpid in zpids:
             property_detail = zillow_web_scraper_client.get_property_by_zpid(zpid)
             properties.append(property_detail)
@@ -84,7 +83,7 @@ def findProperyByCityState(city, state):
 def storeUpdates(properties):
     print "updating properties in db after searching..."
     db = mongodb_client.getDB()
-    for perperty_detail in properties:
+    for property_detail in properties:
         zpid = property_detail['zpid']
         property_detail['last_update'] = time.time()
         db[PROPERTY_TABLE_NAME].replace_one({'zpid': zpid}, property_detail, upsert=True)

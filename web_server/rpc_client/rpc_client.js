@@ -20,12 +20,9 @@ function add(a, b, callback) {
 function searchArea(query, callback) {
   client.request('searchArea', [query], function(err, error, response) {
     if (err) throw err;
-    console.log(response);
     callback(response);
   });
 }
-
-
 
 module.exports = {
   add: add,
