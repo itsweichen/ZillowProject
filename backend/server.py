@@ -34,9 +34,9 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
 
     """Get property details by zpid"""
     @pyjsonrpc.rpcmethod
-    def getDetailsByZpid(self, zpid):
+    def getDetailsByZpid(self, zpid, get_prediciton=False):
         print "getDetailsByZpid() gets called with zpid=[%s]" % str(zpid)
-        return operations.getDetailsByZpid(zpid)
+        return operations.getDetailsByZpid(zpid, get_prediciton)
 
 http_server = pyjsonrpc.ThreadingHttpServer(
     server_address = (SERVER_HOST, SERVER_PORT),

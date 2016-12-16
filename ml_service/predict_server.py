@@ -2,6 +2,8 @@ import pyjsonrpc
 
 from ml_common import *
 
+import itertools
+
 SERVER_HOST = 'localhost'
 SERVER_PORT = 5050
 
@@ -28,8 +30,9 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
         def input_fn_predict():
             return input_fn(sample)
 
-        prediction = linear_regressor.predict(input_fn=input_fn_predict)
-        print prediction
+        y = linear_regressor.predict(input_fn=input_fn_predict)
+        print y
+        prediction = list(itertools.islice(y, 1))
         return prediction[0].item()
 
 http_server = pyjsonrpc.ThreadingHttpServer(

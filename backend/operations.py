@@ -16,6 +16,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 import mongodb_client
 import zillow_web_scraper_client
+import ml_prediction_client
 
 SERVER_HOST = 'localhost'
 SERVER_PORT = 4040
@@ -64,12 +65,23 @@ def searchAreaByCityState(city, state):
     return properties
 
 """Get details by zpid"""
-def getDetailsByZpid(zpid):
+def getDetailsByZpid(zpid, get_prediction=False):
     print "getDetailsByZpid() gets called with zpid=[%s]" % str(zpid)
     db = mongodb_client.getDB()
     property_detail = json.loads(dumps(db[PROPERTY_TABLE_NAME].find_one({'zpid': zpid})))
     if property_detail is None:
         property_detail = zillow_web_scraper_client.get_property_by_zpid(zpid)
+
+    # prediciton!
+    if get_prediction:
+        print "getting prediction"
+        predicted_value = ml_prediction_client.predict(
+            property_detail['zipcode'],
+            property_detail['property_type'],
+            property_detail['bedroom'],
+            property_detail['bathroom'],
+            property_detail['size'])
+        property_detail['predicted_value'] = int(predicted_value)
     return property_detail
 
 """Find property by zipcode"""

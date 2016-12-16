@@ -27,6 +27,10 @@ block content
         else
           h4(style="color: red;") Not For Sale
         br
+        if property.predicted_change >= 0
+          span.h4(style="color: green;") $#{property.predicted_value} (+#{property.predicted_change}%)
+        else
+          span.h4(style="color: red;") $#{property.predicted_value} (#{property.predicted_change}%)
 
     tr
       td(style="padding-left: 50px; width: 600px;")

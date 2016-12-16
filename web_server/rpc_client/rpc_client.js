@@ -27,7 +27,7 @@ function searchArea(query, callback) {
 
 // get property details
 function getDetailsByZpid(id, callback) {
-  client.request('getDetailsByZpid', [id], function(err, error, response) {
+  client.request('getDetailsByZpid', [id, true], function(err, error, response) {
     if (err) throw err;
     console.log("got response from getDetailsByZpid");
     callback(response);

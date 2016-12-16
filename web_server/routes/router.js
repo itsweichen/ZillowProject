@@ -47,6 +47,11 @@ router.get('/detail', function(req, res, next) {
       property = response;
     }
 
+    // Handle predicted value
+    var predicted_value = parseInt(property['predicted_value']);
+    var list_price = parseInt(property['list_price']);
+    property['predicted_change'] = ((predicted_value - list_price) / list_price * 100).toFixed(2);
+
     // add thousands separator for numbers
     addThousandSeparatorForSearchResult(property);
 
