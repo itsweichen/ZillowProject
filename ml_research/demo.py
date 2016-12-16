@@ -4,12 +4,10 @@ import pandas
 import sys
 import tensorflow as tf
 
-from IPython import display
-
 # Training Parameter
 LEARNING_RATE = 50
 
-STEPS = 500
+STEPS = 5000
 TEST_STEPS = 10
 
 CSV_FILE_PATH = '''./sample.csv'''
@@ -32,10 +30,6 @@ CATEGORICAL_COLUMNS = ['zipcode', 'property_type']
 CONTINUOUS_COLUMNS = ['bedroom', 'bathroom', 'size']
 LABEL_COLUMN = 'list_price'
 FEATURE_COLUMNS = ['zipcode', 'property_type', 'bedroom', 'bathroom', 'size', 'list_price']
-
-
-# Set the output display to have one digit for decimal places, for display readability only.
-pandas.options.display.float_format = '{:.1f}'.format
 
 # input_fn return format: (feature_columns, label)
 # feature_columns: {column_name : tf.constant}
