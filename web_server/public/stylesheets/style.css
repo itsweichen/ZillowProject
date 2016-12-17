@@ -1,5 +1,4 @@
 
-
 .index-nav {
   background-color: white;
   box-shadow: none;
@@ -11,6 +10,30 @@
 
 .autocomplete-content {
   margin-top: 0;
+}
+
+footer.page-footer {
+  background-color: #78909c;
+}
+
+nav {
+  background-color: #f5f5f5;
+}
+
+nav form {
+    position: absolute;
+    left: 230px;
+    width: 600px;
+}
+
+.nav-logo {
+  height: auto;
+  width: auto;
+  max-width: 180px;
+  max-height: 35px;
+  left: 15px;
+  position: absolute;
+  top: 18px;
 }
 
 /* Search bar - credit to http://codepen.io/AustinAuth/pen/iksxo */

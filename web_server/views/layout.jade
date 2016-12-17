@@ -4,51 +4,60 @@ html
     title= title
     link(rel='stylesheet', href='/materialize/css/materialize.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
+    script(src='/materialize/js/jquery-3.1.1.min.js')
+    script(src='/materialize/js/materialize.min.js')
     block head
 
   body
-    .navbar.navbar-default.navbar-fixed-top(role='navigation')
-      .container-fluid
-        .navbar-header
-          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand(href='/')
-            img(alt="Smart Zillow" src="/logo.png" style="height: auto; width: auto; max-width: 300px; max-height: 20px;")
-
-        .navbar-collapse.collapse
-          form.navbar-form.navbar-left
-            .form(method="get", action="/search", id="search")
-              input(id="nav-search-box", name="search_text", type="text", class="form-control", placeholder="Search", value=query, onKeyPress="return checkSubmit(event)")
- 
-          ul.nav.navbar-nav.navbar-right
-            li
-              if logged_in_user
-                a(href='/logout') Log out
-              else
-                a(href='/login') Sign in
-
-    .container-fluid(style="margin-top: 80px;")
-      .row
-        .col-md-2
-
-        .col-md-8.main
-          block content
-
-        .col-md-2
-      block log
-      .row
-        .container
-          .row
-            hr
-            .col-lg-12
-              .col-md-8
-                p Terms of Service | Privacy
-              .col-md4
-                .muted.pull-right
-                  p © 2016 Smart Zillow. All rights reserved.
+    //- navbar
+    ul(id="dropdown1" class="dropdown-content")
+      li
+        a(href="#") My Watch List
+      li(class="divider")
+      li
+        a(href="/logout") Log out
+        
+    nav
+      .nav-wrapper
+        a.brand-logo(href='/') 
+          img(alt="Smart Zillow" src="/logo.png" class="nav-logo")
+        form(method="get", action="/search")
+          .input-field
+            input(id="search", type="search", name="search_text", placeholder="Search", required)
+            label(for="search")
+              i(class="material-icons" style="color: #26a69a") search
+            i(class="material-icons") close
+          
+        ul(id='nav-mobile', class='right hide-on-med-and-down')
+          //- li
+          //-   a(href='/')
+          //-     i(class="material-icons") search
+          li
+            //- log in/out btns
+            if logged_in_user
+              a(class="dropdown-button waves-effect waves-light btn btn-index" href="#!" data-activates="dropdown1") 
+                = logged_in_user
+            else
+              a(class='waves-effect waves-light btn btn-index' href='#modal-login') Log in
+              
+    block content
+    
+    footer.page-footer
+      .container
+        .row
+          .col.l6.s12
+            h5(class='white-text') Smart Zillow
+            p(class='grey-text text-lighten-4') Demo Project.
+          .col.l4.offset-12.s12
+            h5(class='white-text') Links
+            ul
+              li
+                a(class="grey-text text-lighten-3" href="#") Terms of Service
+              li
+                a(class="grey-text text-lighten-3" href="#") Privacy
+      .footer-copyright
+        .container © 2016 Smart Zillow. All rights reserved.
 
     script.
       function checkSubmit(e) {
