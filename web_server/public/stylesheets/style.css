@@ -9,6 +9,10 @@
   padding: 0 1rem;
 }
 
+.autocomplete-content {
+  margin-top: 0;
+}
+
 /* Search bar - credit to http://codepen.io/AustinAuth/pen/iksxo */
 
 .search-container{
