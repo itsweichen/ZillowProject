@@ -82,7 +82,7 @@ router.get('/register', function(req, res, next){
 router.post('/register', function(req, res, next){
   var email = req.body.email; // according to [name]
   var password = passwordHash.generate(req.body.password);
-
+  console.log('register called');
   User.find({email: email}, function(err, users) {
     if (err) throw err;
     if (users.length == 0) {
@@ -94,15 +94,10 @@ router.post('/register', function(req, res, next){
       newUser.save(function(err) { // non-blocking way
         if (err) throw err;
         req.session.user = email;
-        res.redirect('/');
+        res.status(202).end();
       });
     } else {
-      // TODO
-      // if false, render the page
-      res.render('register', {
-        title: TITLE,
-        message: 'Email already existed.'
-      });
+      res.status(400).json({message: 'Email already existed.'});
     }
   });
 });
@@ -116,21 +111,15 @@ router.post('/login', function(req, res, next){
     if (err) throw err;
     if (!user) {
       // user not found
-      res.render('login', {
-        title: TITLE,
-        message: "User not found."
-      })
+      res.status(400).json({message: "User not found."});
     } else {
       // user found
       if (passwordHash.verify(password, user.password)) {
         console.log(req.session);
         req.session.user = user.email;
-        res.redirect('/');
+        res.status(202).end();
       } else {
-        res.render('login', {
-          title: TITLE,
-          message: "Password is incorrect."
-        });
+        res.status(400).json({message: "Password invalid."});
       }
     }
   });

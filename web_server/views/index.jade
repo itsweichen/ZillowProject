@@ -3,34 +3,143 @@ html
 
   head
     title= title
-    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/materialize/css/materialize.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-
+    link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
+    script(src='/materialize/js/jquery-3.1.1.min.js')
+    script(src='/materialize/js/materialize.min.js')
+    
   body
-    .navbar.navbar-fixed-top(role='navigation')
-      .container-fluid
-        ul.nav.navbar-nav.navbar-right
-          if logged_in_user
-            li
-              a(href='#')
+    ul(id="dropdown1" class="dropdown-content")
+      li
+        a(href="#") My Watch List
+      li(class="divider")
+      li
+        a(href="/logout") Log out
+  
+    nav(class='index-nav')
+      .nav-wrapper
+        ul(id='nav-mobile', class='right hide-on-med-and-down')
+          li
+            //- log in/out btns
+            if logged_in_user
+              a(class="dropdown-button waves-effect waves-light btn btn-index" href="#!" data-activates="dropdown1") 
                 = logged_in_user
-            li
-              form(class='navbar-form', method='get', action='/logout', id='login')
-                input(class='btn navbar-btn btn-blue' value='Log out' type='submit')
-          else
-            li
-              form(class='navbar-form', method='get', action='/login', id='login')
-                input(class='btn navbar-btn btn-blue' value='Log in' type='submit')
+            else
+              a(class='waves-effect waves-light btn btn-index' href='#modal-login') Log in
+    
+    //- search
     .container(style='margin-top: 10%')
-      .text-center
+      div.center(style='margin-left: 40px')
         img(src='logo.png')
       .row(style='margin-top: 4%')
-        .col-md-2
-        .col-md-8
-          form(method='get', action='/search', id='search')
-            .col-md-10
-              input.form-control(id='search_text', name='search_text', placeholder='Search by City/State or Zipcode')
-            .col-md-2
-              input.form-control(class='btn btn-blue' type='submit' value='Search')
-        .col-md-2
+        form(class='search-container' method='get', action='/search', id='search')
+          input(type="text" class="search-bar" id='search_text', name='search_text', placeholder="Search by City/State or Zipcode")
+          a(href="#" style='color: #26a69a')
+            i(class='search-icon material-icons')
+              = 'search'
+    
+    //- modal-login
+    div(id="modal-login" class="modal")
+      .modal-content
+        h4 Log in
+        form.form-signin(method='post', action='/login', id='loginForm', style='')
+          .row
+            .input-field.col.s12
+              label(for='email') Email Address
+              input(class='form-control validate', id='email', type='email', name='email', required)
+          .row
+            .input-field.col.s12
+              label(for='password') Password
+              input(class='form-control', id='password', type='password', name='password', required)
+      .modal-footer
+        input(form='loginForm' type='submit' class='modal-action waves-effect waves-green btn-flat teal' style='color: white' value='Login') 
+        a(href="#" id='open-register' class="modal-action waves-effect waves-green btn-flat") Register
+    
+    //- modal-register
+    div(id="modal-register" class="modal")
+      .modal-content
+        h4 Register
+        form.form-signin(method='post', action='/register', id='registerForm', style='')
+          .row
+            .input-field.col.s12
+              label(for='email') Email Address
+              input(class='form-control validate', id='email', type='email', name='email', required)
+          .row
+            .input-field.col.s12
+              label(for='password') Password
+              input(class='form-control', id='password', type='password', name='password', required)
+      .modal-footer
+        input(form='registerForm' type='submit' class='modal-action waves-effect waves-green btn-flat teal' style='color: white' value='Register') 
+        a(href="#" id='open-login' class="modal-action waves-effect waves-green btn-flat") Log in
+        
+    script.
+      $(document).ready(function(){
+        $('.modal').modal();
+        
+        //- submit login
+        $('#loginForm').submit(function(event) {
+           event.preventDefault();
+           
+           var $form = $(this),
+               email = $form.find('input[name="email"]').val(),
+               password = $form.find('input[name="password"]').val(),
+               url = $form.attr('action');
+           
+           var posting = $.post(url, {
+             email: email,
+             password: password
+           });
+           
+           posting.fail(function(data) {
+             var message = data.responseJSON.message;
+             Materialize.toast(message, 4000);
+           });
+           
+           posting.done(function(data) {
+             Materialize.toast('Log in successfully!', 4000);
+             $('#modal-login').modal('close');
+             location.reload();
+           });
+        });
+        
+        //- submit register
+        $('#registerForm').submit(function(event) {
+           event.preventDefault();
+           
+           var $form = $(this),
+               email = $form.find('input[name="email"]').val(),
+               password = $form.find('input[name="password"]').val(),
+               url = $form.attr('action');
+           
+           var posting = $.post(url, {
+             email: email,
+             password: password
+           });
+           
+           posting.fail(function(data) {
+             var message = data.responseJSON.message;
+             Materialize.toast(message, 4000);
+           });
+           
+           posting.done(function(data) {
+             Materialize.toast('Register successfully!', 4000);
+             $('#modal-register').modal('close');
+             location.reload();
+           });
+        });
+        
+        
+        $('#open-register').click(function(event) {
+          event.preventDefault();
+          $('#modal-login').modal('close');
+          $('#modal-register').modal('open');
+        });
+        
+        $('#open-login').click(function(event) {
+          event.preventDefault();
+          $('#modal-register').modal('close');
+          $('#modal-login').modal('open');
+        });
+        
+      });
