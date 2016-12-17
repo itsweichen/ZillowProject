@@ -15,7 +15,7 @@ from cloudAMQP_client import CloudAMQPClient
 # RabbitMQ config
 CLOUD_AMQP_URL = '''amqp://kdflangt:w3wO5ExwRgGqixP6q-4Y9HDy2aGXETCG@hyena.rmq.cloudamqp.com/kdflangt'''
 DATA_FETCHER_QUEUE_NAME = 'dataFetcherTaskQueue'
-ZIPCODE_FILE = 'bay_area_zipcode_list.txt'
+ZIPCODE_FILE = 'san_diego_zipcode_list.txt'
 
 WAITING_TIME = 3
 

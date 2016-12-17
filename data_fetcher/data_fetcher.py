@@ -48,7 +48,8 @@ def handle_message(msg):
     if FETCH_SIMILAR_PROPERTIES:
         # get its similar properties' zpid
         similar_zpids = zillow_web_scraper_client.get_similar_homes_for_sale_by_id(zpid)
-
+        print "similar zpids: ", similar_zpids
+        
         # generate tasks for similar
         for zpid in similar_zpids:
             old = db[PROPERTY_TABLE_NAME].find_one({'zpid': zpid})
