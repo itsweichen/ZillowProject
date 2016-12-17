@@ -1,0 +1,105 @@
+//- user login / register 
+
+//- modal-login
+div(id="modal-login" class="modal")
+  .modal-content
+    h4 Log in
+    form.form-signin(method='post', action='/login', id='loginForm', style='')
+      .row
+        .input-field.col.s12
+          label(for='email') Email Address
+          input(class='form-control validate', id='email', type='email', name='email', required)
+      .row
+        .input-field.col.s12
+          label(for='password') Password
+          input(class='form-control', id='password', type='password', name='password', required)
+  .modal-footer
+    input(form='loginForm' type='submit' class='modal-action waves-effect waves-green btn-flat teal' style='color: white' value='Login') 
+    a(href="#" id='open-register' class="modal-action waves-effect waves-green btn-flat") Register
+
+//- modal-register
+div(id="modal-register" class="modal")
+  .modal-content
+    h4 Register
+    form.form-signin(method='post', action='/register', id='registerForm', style='')
+      .row
+        .input-field.col.s12
+          label(for='email') Email Address
+          input(class='form-control validate', id='email', type='email', name='email', required)
+      .row
+        .input-field.col.s12
+          label(for='password') Password
+          input(class='form-control', id='password', type='password', name='password', required)
+  .modal-footer
+    input(form='registerForm' type='submit' class='modal-action waves-effect waves-green btn-flat teal' style='color: white' value='Register') 
+    a(href="#" id='open-login' class="modal-action waves-effect waves-green btn-flat") Log in
+
+script.
+  
+    $('.modal').modal();
+    
+    //- submit login
+    $('#loginForm').submit(function(event) {
+       event.preventDefault();
+       
+       var $form = $(this),
+           email = $form.find('input[name="email"]').val(),
+           password = $form.find('input[name="password"]').val(),
+           url = $form.attr('action');
+       
+       var posting = $.post(url, {
+         email: email,
+         password: password
+       });
+       
+       posting.fail(function(data) {
+         var message = data.responseJSON.message;
+         Materialize.toast(message, 4000);
+       });
+       
+       posting.done(function(data) {
+         Materialize.toast('Log in successfully!', 4000);
+         $('#modal-login').modal('close');
+         window.location.reload();
+       });
+    });
+    
+    //- submit register
+    $('#registerForm').submit(function(event) {
+       event.preventDefault();
+       
+       var $form = $(this),
+           email = $form.find('input[name="email"]').val(),
+           password = $form.find('input[name="password"]').val(),
+           url = $form.attr('action');
+       
+       var posting = $.post(url, {
+         email: email,
+         password: password
+       });
+       
+       posting.fail(function(data) {
+         var message = data.responseJSON.message;
+         Materialize.toast(message, 4000);
+       });
+       
+       posting.done(function(data) {
+         Materialize.toast('Register successfully!', 4000);
+         $('#modal-register').modal('close');
+         window.location.reload();
+       });
+    });
+    
+    
+    $('#open-register').click(function(event) {
+      event.preventDefault();
+      $('#modal-login').modal('close');
+      $('#modal-register').modal('open');
+    });
+    
+    $('#open-login').click(function(event) {
+      event.preventDefault();
+      $('#modal-register').modal('close');
+      $('#modal-login').modal('open');
+    });
+  

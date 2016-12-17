@@ -30,9 +30,6 @@ html
             i(class="material-icons") close
           
         ul(id='nav-mobile', class='right hide-on-med-and-down')
-          //- li
-          //-   a(href='/')
-          //-     i(class="material-icons") search
           li
             //- log in/out btns
             if logged_in_user
@@ -40,8 +37,10 @@ html
                 = logged_in_user
             else
               a(class='waves-effect waves-light btn btn-index' href='#modal-login') Log in
-              
+    
     block content
+    
+    include user.jade
     
     footer.page-footer
       .container

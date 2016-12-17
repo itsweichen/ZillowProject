@@ -7,10 +7,11 @@ block content
       .col.s12.m7(onclick="window.document.location='/detail?id=#{result.zpid}';", style="cursor:pointer")
         .card.horizontal
           .card-image
-            if result.image_url == ""
-              img(src="/default.png", style="max-height: 200px")
-            else
-              img(src= result.image_url, onerror="this.src='/default.jpg'", style="max-height: 200px")
+            div(style="width:300px; height: 200px; overflow:hidden")
+              if result.image_url == "" || result.image_url == null
+                img(src="/default.png", style="width:300px")
+              else
+                img(src= result.image_url, onerror="this.src='/default.jpg'" style="width:300px")
           .card-image
             img(width="185" src="http://dev.virtualearth.net/REST/V1/Imagery/Map/Road/#{result.latitude}%2C#{result.longitude}/13?mapSize=200,200&format=png&pushpin=#{result.latitude},#{result.longitude};86;&key=AqO1MgaLkk7DdoBd-2lajxSIhDXs5aMzE_xLzPU-Lmmjh0rHy2Z6NQeb_iwhYBVx" alt="Bing Map of #{result.latitude}, {result.longitude}")
           .card-stacked
