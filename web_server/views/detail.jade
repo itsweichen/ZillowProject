@@ -1,64 +1,66 @@
 extends layout
 
 block content
-  table
-    tr
-      td(colspan="2", style="100%")
-        div(style="float:left;")
-          if property.image_url == "" || property.image_url == null
-            img(src="/default.png", style="width:400px;")
-          else
-            img(src= property.image_url, onerror="this.src='/default.jpg'", style="width:400px;")
-        div(style="float:left; margin-left:40px;")
-          div(id="map", style="width:300px; height:300px;")
-    tr
-      td(style="padding-left:50px; width:800px;")
-        table
-          tr
-            h2 #{property.street_address},
-            h3 #{property.city}, #{property.state} #{property.zipcode}
-          tr
-            h4 #{property.property_type} - #{property.bedroom} Bed / #{property.bathroom} Bath - #{property.size} sqft
-          tr
-      td(style="width:200px;")
-        if property.is_for_sale == true
-          h4(style="color: green;") • For Sale
-          span.h3 $#{property.list_price}
-        else
-          h4(style="color: red;") Not For Sale
-        br
-        if property.predicted_change >= 0
-          span.h4(style="color: green;") $#{property.predicted_value} (+#{property.predicted_change}%)
-        else
-          span.h4(style="color: red;") $#{property.predicted_value} (#{property.predicted_change}%)
+  .container
+    table
+      tr
+        td(colspan="2", style="100%")
+          div(style="float:left;")
+            if property.image_url == "" || property.image_url == null
+              img(src="/default.png", style="width:400px;")
+            else
+              img(src= property.image_url, onerror="this.src='/default.jpg'", style="width:400px;")
+          div(style="float:left; margin-left:40px;")
+            div(id="map", style="width:300px; height:300px;")
+      tr
+        td(style="padding-left:50px; width:800px;")
+          table
+            tr
+              h2(style='font-weight: 500') #{property.street_address},
+              h4(style='font-weight: 300') #{property.city}, #{property.state} #{property.zipcode}
+            tr
+              h5(style='font-weight: 400') #{property.property_type} - #{property.bedroom} Bed / #{property.bathroom} Bath - #{property.size} sqft
+            tr
+        td(style="width:300px;")
+          .card.grey.lighten-3
+            .card-content
+              if property.is_for_sale == true
+                span.card-title(style="color: green;") For Sale
+                p $#{property.list_price}
+              else
+                span.card-title(style="color: red;") Not For Sale
+              if property.predicted_change >= 0
+                p(style="color: green;") $#{property.predicted_value} (+#{property.predicted_change}%)
+              else
+                p(style="color: red;") $#{property.predicted_value} (#{property.predicted_change}%)
 
-    tr
-      td(style="padding-left: 50px; width: 600px;")
-        p= property.description
-    tr
-      td(style="padding-left: 50px; width: 600px;")
-        br
-        b Facts
-    tr
-      td(style="padding-left: 50px; width: 600px;")
-        table
-          for fact_group in property.facts
-            td(style="width: 30%;" valign="top")
-              ul
-                for fact in fact_group
-                  li= fact
-    tr
-      td(style="padding-left: 50px; width: 600px;")
-        br
-        b Additional Facts
-    tr
-      td(style="padding-left: 50px; width: 600px;")
-        table
-          for additional_fact_group in property.additional_facts
-            td(style="width: 30%;" valign="top")
-              ul
-                for additional_fact in additional_fact_group
-                  li= additional_fact
+      tr
+        td(style="padding-left: 50px; width: 600px;")
+          p= property.description
+      tr
+        td(style="padding-left: 50px; width: 600px;")
+          br
+          b Facts
+      tr
+        td(style="padding-left: 50px; width: 600px;")
+          table
+            for fact_group in property.facts
+              td(style="width: 30%;" valign="top")
+                ul
+                  for fact in fact_group
+                    li= fact
+      tr
+        td(style="padding-left: 50px; width: 600px;")
+          br
+          b Additional Facts
+      tr
+        td(style="padding-left: 50px; width: 600px;")
+          table
+            for additional_fact_group in property.additional_facts
+              td(style="width: 30%;" valign="top")
+                ul
+                  for additional_fact in additional_fact_group
+                    li= additional_fact
 
   script.
     function loadMapScenario() {
