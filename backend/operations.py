@@ -32,9 +32,12 @@ def searchArea(text):
     if text.isdigit():
         properties = searchAreaByZipcode(text)
     else:
-        city = text.split(',')[0].strip()
-        state = text.split(', ')[1].strip()
-        properties = searchAreaByCityState(city, state)
+        try:
+            city = text.split(',')[0].strip()
+            state = text.split(', ')[1].strip()
+            properties = searchAreaByCityState(city, state)
+        except Exception:
+            properties = []
     return properties
 
 """Search properties by zip code"""
@@ -57,7 +60,7 @@ def searchAreaByCityState(city, state):
     properties = findPropertyByCityState(city, state)
     if len(properties) == 0:
         # cannot find in db, use scraper to fetch
-        zpids = zillow_web_scraper_client.get_zpid_by_city_state() # rename
+        zpids = zillow_web_scraper_client.get_zpid_by_city_state(city, state) # rename
         for zpid in zpids:
             property_detail = zillow_web_scraper_client.get_property_by_zpid(zpid)
             properties.append(property_detail)

@@ -7,8 +7,6 @@ var watchlistSchema = new Schema({
   zpid: {type: String, required: true},
   created_price: Number,
   created_at: Date,
-  updated_price: Number,
-  updated_at: Date
 
   // how about this design?
   // list: [
@@ -25,9 +23,7 @@ var watchlistSchema = new Schema({
 // On every save, update the timestamp
 watchlistSchema.pre('save', function(next) {
   var currentDate = new Date();
-
-  this.updated_at = currentDate;
-
+  
   if (!this.created_at) {
     this.created_at = currentDate;
   };

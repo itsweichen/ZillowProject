@@ -50,8 +50,7 @@ router.post('/addToList', function(req, res, next){
   var newList = Watchlist({
     email: email,
     zpid: zpid,
-    created_price: created_price,
-    updated_price: updated_price
+    created_price: created_price
   });
 
   newList.save(function(err) {

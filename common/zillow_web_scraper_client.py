@@ -70,6 +70,7 @@ def get_zpid_by_city_state(city, state):
     city_state = pathname2url('%s %s' % (city, state))
     request_url = '%s/%s' % (build_url(URL, SEARCH_FOR_SALE_PATH), city_state)
     raw_result = search_zillow(request_url, SEARCH_XPATH_FOR_ZPID)
+    return [x.replace('zpid_', '') for x in raw_result]
 
 """ Get similar homes for sale """
 def get_similar_homes_for_sale_by_id(zpid):
