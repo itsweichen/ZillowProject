@@ -22,6 +22,7 @@ SERVER_HOST = 'localhost'
 SERVER_PORT = 4040
 
 PROPERTY_TABLE_NAME = 'property'
+WATCHLIST_TABLE_NAME = 'watchlist'
 
 # TODO: search by detailed address
 
@@ -111,3 +112,9 @@ def storeUpdates(properties):
         zpid = property_detail['zpid']
         property_detail['last_update'] = time.time()
         db[PROPERTY_TABLE_NAME].replace_one({'zpid': zpid}, property_detail, upsert=True)
+
+"""Get Properties on Watch List"""
+def getWatchList(email):
+    db = mongodb_client.getDB()
+    properties = list(db[WATCHLIST_TABLE_NAME].find({'email': email}))
+    return json.loads(dumps(properties))

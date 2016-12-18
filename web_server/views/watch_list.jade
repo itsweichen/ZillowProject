@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  .container
+    h3 Watch List
+    
+    table.highlight
+      thead
+        tr
+          th Zillow Home ID
+          th Street
+          th City
+          th State
+          th Past Price
+          th Current Price
+          th Price Change
+          th Action
+      tbody
+        for result in results
+          tr
+            td #{result.zpid}
+            td Street
+            td City
+            td State
+            if result.created_price == 0
+              td NOT FOR SALE
+            else
+              td #{result.created_price}
+            if result.updated_price == 0
+              td NOT FOR SALE
+            else
+              td #{result.updated_price}
+            td #{result.updated_price - result.created_price}
+            td Action

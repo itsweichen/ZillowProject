@@ -33,10 +33,16 @@ block content
                 p(style="color: green;") $#{property.predicted_value} (+#{property.predicted_change}%)
               else
                 p(style="color: red;") $#{property.predicted_value} (#{property.predicted_change}%)
-
+      tr
+        td(style="padding-left:50px")
+          if is_watched
+            a(class="waves-effect waves-light btn" id="add-to-list" disabled) Add to my list
+          else
+            a(class="waves-effect waves-light btn" id="add-to-list") Add to my list
       tr
         td(style="padding-left: 50px; width: 600px;")
           p= property.description
+        
       tr
         td(style="padding-left: 50px; width: 600px;")
           br
@@ -63,6 +69,46 @@ block content
                     li= additional_fact
 
   script.
+    $(document).ready(function(){
+    
+      $('#add-to-list').click(function(event) {
+        event.preventDefault();
+        
+        var user_email = "#{logged_in_user}";
+        
+        if (user_email == "") {
+          Materialize.toast("Please log in first.", 4000);
+          $('#modal-login').modal('open');
+          return;
+        }
+        
+        var property_zpid = "#{id}";
+        var is_for_sale = "#{property.is_for_sale}";
+        var created_price = 0; // not_for_sale
+        if (is_for_sale) {
+          created_price = "#{property.list_price}";
+        }
+        var posting = $.post("/addToList", {
+          user_email: user_email,
+          property_zpid: property_zpid,
+          created_price: created_price
+        });
+        
+        posting.fail(function(data) {
+          var message = data.responseJSON.message;
+          Materialize.toast(message, 4000);
+        });
+        
+        posting.done(function(data) {
+          Materialize.toast('Added to my watch list!', 4000);
+        });
+        
+      });
+      
+      
+    });
+    
+  
     function loadMapScenario() {
         var map = new Microsoft.Maps.Map(document.getElementById('map'), {
             credentials: 'AqO1MgaLkk7DdoBd-2lajxSIhDXs5aMzE_xLzPU-Lmmjh0rHy2Z6NQeb_iwhYBVx',

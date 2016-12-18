@@ -34,8 +34,19 @@ function getDetailsByZpid(id, callback) {
   });
 }
 
+
+// get watch list
+function getWatchList(email, callback) {
+  client.request('getWatchList', [email], function(err, error, response) {
+    if (err) throw err;
+    console.log("got response from getWatchList");
+    callback(response);
+  });
+}
+
 module.exports = {
   add: add,
   searchArea: searchArea,
-  getDetailsByZpid: getDetailsByZpid
+  getDetailsByZpid: getDetailsByZpid,
+  getWatchList: getWatchList
 };

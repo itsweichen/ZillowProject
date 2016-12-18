@@ -2,11 +2,13 @@ var express = require('express');
 var passwordHash = require('password-hash');
 var session = require('client-sessions');
 var User = require('../model/user');
+var Watchlist = require('../model/watchlist');
 var rpc_client = require('../rpc_client/rpc_client');
-
+var mongoose = require('mongoose');
 var router = express.Router();
 
 TITLE = 'Smart Zillow';
+PROPERTY_TABLE_NAME = 'property';
 
 // Index page
 router.get('/', function(req, res, next) {
@@ -14,8 +16,46 @@ router.get('/', function(req, res, next) {
   res.render('index', {title: TITLE, logged_in_user: user});
 });
 
+router.get('/mylist', function(req, res, next){
+  var user_email = checkLoggedIn(req);
+  rpc_client.getWatchList(user_email, function(response) {
+    console.log(response);
+
+    if (response == undefined || response === null) {
+      console.log("No results found.");
+    }
+
+    res.render('watch_list', {
+      title: TITLE,
+      results: response,
+      logged_in_user: user_email
+    });
+  });
+})
+
+router.post('/addToList', function(req, res, next){
+  var email = req.body.user_email;
+  var zpid = req.body.property_zpid;
+  var created_price = req.body.created_price;
+  var updated_price = req.body.created_price;
+  var newList = Watchlist({
+    email: email,
+    zpid: zpid,
+    created_price: created_price,
+    updated_price: updated_price
+  });
+
+  newList.save(function(err) {
+      if (err) throw err;
+      req.session.user = email;
+      res.status(202).end();
+    });
+});
+
 // search
 router.get('/search', function(req, res, next) {
+  logged_in_user = checkLoggedIn(req, res);
+
   var query = req.query.search_text; //req.query returns a json
   console.log("search text: " + query);
 
@@ -27,7 +67,8 @@ router.get('/search', function(req, res, next) {
     res.render('search_result', {
       title: TITLE,
       query: query,
-      results: response
+      results: response,
+      logged_in_user: logged_in_user
     });
   });
 });
@@ -38,6 +79,17 @@ router.get('/detail', function(req, res, next) {
 
   var id = req.query.id;
   console.log("detail for id: " + id);
+
+  var is_watched = false;
+  // check whether in watchlist
+  Watchlist.findOne({email: logged_in_user, zpid: id}, function(err, data) {
+    if (err) throw err;
+    console.log("Is in list");
+    console.log(data);
+    if (data) {
+      is_watched = true;
+    }
+  });
 
   rpc_client.getDetailsByZpid(id, function(response) {
     property = {}
@@ -63,7 +115,9 @@ router.get('/detail', function(req, res, next) {
       title: TITLE,
       query: '',
       logged_in_user: logged_in_user,
-      property: property
+      property: property,
+      id: id,
+      is_watched: is_watched
     });
   });
 });
@@ -130,6 +184,13 @@ router.get('/logout', function(req, res, next) {
   req.session.reset();
   res.redirect('/');
 });
+
+// find mongodb items without using mongoose modal(schema)
+function find(collec, query, callback) {
+    mongoose.connection.db.collection(collec, function (err, collection) {
+    collection.find(query).toArray(callback);
+  });
+}
 
 function checkLoggedIn(req) {
   if (req.session && req.session.user) {

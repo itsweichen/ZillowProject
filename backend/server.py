@@ -38,6 +38,12 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
         print "getDetailsByZpid() gets called with zpid=[%s]" % str(zpid)
         return operations.getDetailsByZpid(zpid, get_prediciton)
 
+    """Get Properties on Watch List"""
+    @pyjsonrpc.rpcmethod
+    def getWatchList(self, email):
+        print "getWatchList() gets called with email=[%s]" % str(email)
+        return operations.getWatchList(email)
+
 http_server = pyjsonrpc.ThreadingHttpServer(
     server_address = (SERVER_HOST, SERVER_PORT),
     RequestHandlerClass = RequestHandler
