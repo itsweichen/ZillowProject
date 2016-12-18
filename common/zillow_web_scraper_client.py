@@ -73,7 +73,7 @@ def get_zpid_by_city_state(city, state):
 
 """ Get similar homes for sale """
 def get_similar_homes_for_sale_by_id(zpid):
-    request_url = '%s/%s_zpid' % (build_url(URL, GET_SIMILAR_HOMES_FOR_SALE_XPATH), str(zpid))
+    request_url = '%s/%s_zpid' % (build_url(URL, GET_SIMILAR_HOMES_FOR_SALE_PATH), str(zpid))
     raw_result = search_zillow(request_url, GET_SIMILAR_HOMES_FOR_SALE_XPATH)
     return [re.search(SIMILAR_HOMES_ZPID_REGEX_PATTERN, x).group(1) for x in raw_result]
 

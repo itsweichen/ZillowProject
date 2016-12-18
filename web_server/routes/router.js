@@ -4,6 +4,7 @@ var session = require('client-sessions');
 var User = require('../model/user');
 var Watchlist = require('../model/watchlist');
 var rpc_client = require('../rpc_client/rpc_client');
+var redis_client = require('../redis_client/redis_client');
 var mongoose = require('mongoose');
 var router = express.Router();
 
@@ -14,6 +15,14 @@ PROPERTY_TABLE_NAME = 'property';
 router.get('/', function(req, res, next) {
   var user = checkLoggedIn(req);
   res.render('index', {title: TITLE, logged_in_user: user});
+});
+
+// autocomplete for search bar
+router.get('/autocomplete', function(req, res, next) {
+  var query = req.query.query;
+  redis_client.getAutocomplete(query, function(response) {
+    res.json(response);
+  });
 });
 
 router.get('/mylist', function(req, res, next){
@@ -54,7 +63,7 @@ router.post('/addToList', function(req, res, next){
 
 // search
 router.get('/search', function(req, res, next) {
-  logged_in_user = checkLoggedIn(req, res);
+  logged_in_user = checkLoggedIn(req);
 
   var query = req.query.search_text; //req.query returns a json
   console.log("search text: " + query);
@@ -75,7 +84,7 @@ router.get('/search', function(req, res, next) {
 
 // detail page
 router.get('/detail', function(req, res, next) {
-  logged_in_user = checkLoggedIn(req, res);
+  logged_in_user = checkLoggedIn(req);
 
   var id = req.query.id;
   console.log("detail for id: " + id);

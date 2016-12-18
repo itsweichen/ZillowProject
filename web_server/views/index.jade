@@ -36,6 +36,7 @@ html
       .row(style='margin-top: 4%')
         form(class='search-container' method='get', action='/search', id='search')
           input(type="text" class="search-bar autocomplete" id='search_text', name='search_text', placeholder="Search by City/State or Zipcode", autocomplete="off")
+          ul(class="autocomplete-content dropdown-content" id="autocomplete")
           //- a(href="#" style='color: #26a69a')
           //-   i(class='search-icon material-icons')
           //-     = 'search'
@@ -45,13 +46,40 @@ html
     script.
       $(document).ready(function(){
         //- autocomplete
-        $('input.autocomplete').autocomplete({
-          data: {
-            "Apple": null,
-            "Microsoft": null,
-            "Google": 'http://placehold.it/250x250',
-            "Malll": null
+        function insertAutocomplete(array) {
+          var ele_string = '';
+          for (var i = 0; i < array.length; i++) {
+            ele_string += '<li><span>' + array[i] + '</span></li>';
           }
+          $("#autocomplete").html(ele_string);
+        }
+        
+        $('#search_text').keyup(function() {
+          //- $('.autocomplete-content').remove();
+          
+          var query = $(this).val();
+          
+          var getting = $.get('/autocomplete', {
+            query: query
+          });
+          
+          getting.done(function(response) {
+            console.log(response);
+            if (response.length > 0) {
+              insertAutocomplete(response);
+            } else {
+              $('#autocomplete').html("");
+            }
+          });
         });
         
+        $(document).on('click', 'ul#autocomplete > li', function(event) {
+          var text = $(this).children().text();
+          $('#search_text').val(text);
+          $('#autocomplete').html("");
+        });
+        
+        $('#search_text').blur(function() {
+          $('#autocomplete').html("");
+        })
       });
