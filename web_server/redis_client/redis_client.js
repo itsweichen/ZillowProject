@@ -16,6 +16,7 @@ function test(callback) {
 
 function getAutocomplete(query, callback) {
   console.log("redis_client: getAutocomplete() gets called with query=" + query);
+  // ZRANGEBYLEX key min max [LIMIT offset count]
   client.zrangebylex(AUTOCOMPLETE_KEY, '[' + query, '[' + query + '\xff',
     "LIMIT", "0", AUTOCOMPLETE_LIMIT, function(err, response){
       if (err) throw err;

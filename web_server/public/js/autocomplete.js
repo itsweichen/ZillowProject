@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+  // insert html elements under search bar
   function insertAutocomplete(array) {
     var ele_string = '';
     for (var i = 0; i < array.length; i++) {
@@ -8,7 +9,7 @@ $(document).ready(function(){
     $("#autocomplete").html(ele_string);
   }
 
-  $(document).on('keyup', '#search_text', function() {
+  $("#search_text").keyup(function(event) {
     var query = $(this).val();
     var getting = $.get('/autocomplete', {
       query: query
@@ -24,7 +25,7 @@ $(document).ready(function(){
     });
   });
 
-  $(document).on('click', 'ul#autocomplete > li', function(event) {
+  $("ul#autocomplete").on('click', 'li', function(event) {
     var text = $(this).children().text();
     $('#search_text').val(text);
     $('#autocomplete').html("");
