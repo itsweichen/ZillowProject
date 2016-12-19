@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  //- autocomplete
+
   function insertAutocomplete(array) {
     var ele_string = '';
     for (var i = 0; i < array.length; i++) {
@@ -30,11 +30,5 @@ $(document).ready(function(){
     $('#autocomplete').html("");
     $('#search_text').focus();
   });
-
-  // There is some problem here.
-  // $(document).on('blur', '#search_text', function(event) {
-  //   console.log(event);
-  //   $('#autocomplete').html("");
-  // });
 
 });

@@ -26,10 +26,8 @@ router.get('/autocomplete', function(req, res, next) {
 });
 
 router.delete('/deleteFromList', function(req, res) {
-
   var email = req.body.user_email;
   var zpid = req.body.property_zpid;
-
   Watchlist.findOneAndRemove({email: email, zpid: zpid}, function(err, doc, result) {
     if (err) throw err;
     console.log("Remove " + zpid + " from list!");
@@ -58,7 +56,6 @@ router.post('/addToList', function(req, res, next){
   var email = req.body.user_email;
   var zpid = req.body.property_zpid;
   var created_price = req.body.created_price;
-  var updated_price = req.body.created_price;
   var newList = Watchlist({
     email: email,
     zpid: zpid,
@@ -67,7 +64,6 @@ router.post('/addToList', function(req, res, next){
 
   newList.save(function(err) {
       if (err) throw err;
-      req.session.user = email;
       res.status(202).end();
     });
 });
