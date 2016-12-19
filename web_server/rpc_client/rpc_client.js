@@ -44,9 +44,19 @@ function getWatchList(email, callback) {
   });
 }
 
+// update user watchlist
+function updateWatchList(email, callback) {
+  client.request('updateWatchList', [email], function(err, error, response) {
+    if (err) throw err;
+    console.log("got response from updateWatchlist");
+    callback(response);
+  })
+}
+
 module.exports = {
   add: add,
   searchArea: searchArea,
   getDetailsByZpid: getDetailsByZpid,
-  getWatchList: getWatchList
+  getWatchList: getWatchList,
+  updateWatchList: updateWatchList
 };

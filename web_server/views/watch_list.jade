@@ -1,34 +1,101 @@
-extends layout
+extends layout.jade
 
-block content
-  .container
-    h3 Watch List
+block head
+  style.
+    td {
+      padding: 0px 5px
+    }
+    i.delete-item {
+      color: #26a69a;
+    }
+    i.delete-item:hover {
+      color: #00695c;
+    }
+    hr {
+      display: block;
+      height: 1px;
+      border: 0;
+      border-top: 1px solid #26a69a;
+      margin-top: 15px;
+      margin-bottom: 1px;
+      padding: 0;
+    }
     
-    table.highlight
-      thead
-        tr
-          th Zillow Home ID
-          th Street
-          th City
-          th State
-          th Past Price
-          th Current Price
-          th Price Change
-          th Action
-      tbody
-        for result in results
-          tr
-            td #{result.zpid}
-            td Street
-            td City
-            td State
-            if result.created_price == 0
-              td NOT FOR SALE
-            else
-              td #{result.created_price}
-            if result.updated_price == 0
-              td NOT FOR SALE
-            else
-              td #{result.updated_price}
-            td #{result.updated_price - result.created_price}
-            td Action
+block content
+  .container(style="margin-top: 30px")
+    if logged_in_user
+      h4(style='font-weight: 400') My Watchlist
+        for result in results 
+          .col.s12.m7(onclick="", style="cursor:pointer", class="watchlist-item")
+            .card.horizontal
+              .card-image
+                div(style="width:300px; height: 200px; overflow:hidden")
+                  if result.image_url == "" || result.image_url == null
+                    img(src="/default.png", style="width:300px")
+                  else
+                    img(src= result.image_url, onerror="this.src='/default.jpg'" style="width:300px")
+              .card-image
+                img(width="185" src="http://dev.virtualearth.net/REST/V1/Imagery/Map/Road/#{result.latitude}%2C#{result.longitude}/13?mapSize=200,200&format=png&pushpin=#{result.latitude},#{result.longitude};86;&key=AqO1MgaLkk7DdoBd-2lajxSIhDXs5aMzE_xLzPU-Lmmjh0rHy2Z6NQeb_iwhYBVx" alt="Bing Map of #{result.latitude}, {result.longitude}")
+              .card-stacked
+                .card-content
+                  span(class='card-title' style='font-weight: 500') #{result.street_address} 
+                    i(class="material-icons right delete-item" data-zpid='#{result.zpid}') delete
+                  h6 #{result.city}, #{result.state} #{result.zipcode}
+                  hr
+                  table
+                    tbody
+                      tr
+                        td 
+                          h6 Previous Price
+                        td 
+                          h6 Current Price
+                        td 
+                          h6 Price change
+                      tr
+                        td
+                          if result.created_price == 0
+                            h6 Not For Sale
+                          else
+                            h6 $#{result.created_price}
+                        td
+                          if result.is_for_sale == true
+                            h6(class='teal-text') $#{result.list_price}
+                          else
+                            h6(class="red-text") Not For Sale
+                        td
+                          h6
+                            = result.list_price - result.created_price
+        else
+          h5 You don't have any watched items yet.
+    else
+      h5 Please log in first. You'll be redirect after
+    
+      script.
+        $(document).ready(function(){
+          Materialize.toast("Please log in first.", 4000);
+          $('#modal-login').modal('open');
+        });
+
+  script.
+    $(document).ready(function(){
+      $('.delete-item').click(function(event) {
+        var property_zpid = this.getAttribute('data-zpid');
+        var user_email = "#{logged_in_user}";
+        var item_dom = $(this).closest('.watchlist-item');
+        $.ajax({
+          url: '/deleteFromList',
+          type: 'DELETE',
+          data: {
+            user_email: user_email,
+            property_zpid: property_zpid
+          },
+          success: function(result) {
+            Materialize.toast("Deleted from my watch list!", 4000);
+            item_dom.remove();
+          }
+        });
+        
+        event.stopPropagation();
+      })
+    });
+    

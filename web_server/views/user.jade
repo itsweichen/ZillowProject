@@ -53,7 +53,7 @@ script.
        });
        
        posting.fail(function(data) {
-         var message = data.responseJSON.message;
+         var message = data.message;
          Materialize.toast(message, 4000);
        });
        
@@ -79,7 +79,7 @@ script.
        });
        
        posting.fail(function(data) {
-         var message = data.responseJSON.message;
+         var message = data.message;
          Materialize.toast(message, 4000);
        });
        

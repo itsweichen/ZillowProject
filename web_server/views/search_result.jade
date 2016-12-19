@@ -16,7 +16,7 @@ block content
             img(width="185" src="http://dev.virtualearth.net/REST/V1/Imagery/Map/Road/#{result.latitude}%2C#{result.longitude}/13?mapSize=200,200&format=png&pushpin=#{result.latitude},#{result.longitude};86;&key=AqO1MgaLkk7DdoBd-2lajxSIhDXs5aMzE_xLzPU-Lmmjh0rHy2Z6NQeb_iwhYBVx" alt="Bing Map of #{result.latitude}, {result.longitude}")
           .card-stacked
             .card-content
-              span(class='card-title') #{result.street_address}
+              span(class='card-title' style='font-weight: 500') #{result.street_address}
               h6 #{result.city}, #{result.state} #{result.zipcode}
               if result.is_for_sale == true
                 h6(class='teal-text') Listing Price: $#{result.list_price}

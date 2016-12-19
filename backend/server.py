@@ -44,6 +44,12 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
         print "getWatchList() gets called with email=[%s]" % str(email)
         return operations.getWatchList(email)
 
+    """Update Properties on Watch List"""
+    @pyjsonrpc.rpcmethod
+    def updateWatchList(self, email):
+        print "updateWatchlist() gets called with email=[%s]" % str(email)
+        return operations.updateWatchList(email)
+
 http_server = pyjsonrpc.ThreadingHttpServer(
     server_address = (SERVER_HOST, SERVER_PORT),
     RequestHandlerClass = RequestHandler

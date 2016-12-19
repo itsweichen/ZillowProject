@@ -9,6 +9,7 @@ import pyjsonrpc
 import json
 import re
 import time
+import pymongo
 
 from bson.json_util import dumps
 
@@ -23,6 +24,8 @@ SERVER_PORT = 4040
 
 PROPERTY_TABLE_NAME = 'property'
 WATCHLIST_TABLE_NAME = 'watchlist'
+
+WAITING_TIME = 1
 
 # TODO: search by detailed address
 
@@ -119,5 +122,26 @@ def storeUpdates(properties):
 """Get Properties on Watch List"""
 def getWatchList(email):
     db = mongodb_client.getDB()
-    properties = list(db[WATCHLIST_TABLE_NAME].find({'email': email}))
+    watchlist_docs = db[WATCHLIST_TABLE_NAME].find({'email': email}).sort("created_at", pymongo.DESCENDING)
+    properties = []
+    for doc in watchlist_docs:
+        zpid = doc['zpid']
+        property_detail = db[PROPERTY_TABLE_NAME].find_one({'zpid': zpid})
+        property_detail['created_price'] = doc['created_price']
+        properties.append(property_detail)
     return json.loads(dumps(properties))
+
+"""Update Properties on Watch List"""
+def updateWatchList(email):
+    db = mongodb_client.getDB()
+    watchlist_docs = db[WATCHLIST_TABLE_NAME].find({'email': email})
+    for doc in watchlist_docs:
+        zpid = doc['zpid']
+        print "\n > updating watchlist for " + zpid
+        # update
+        property_detail = zillow_web_scraper_client.get_property_by_zpid(zpid)
+        property_detail['last_update'] = time.time()
+        db[PROPERTY_TABLE_NAME].replace_one({'zpid': zpid}, property_detail, upsert=True) # use replace_one
+        print property_detail
+        time.sleep(WAITING_TIME)
+    return "success"

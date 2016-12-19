@@ -25,6 +25,18 @@ router.get('/autocomplete', function(req, res, next) {
   });
 });
 
+router.delete('/deleteFromList', function(req, res) {
+
+  var email = req.body.user_email;
+  var zpid = req.body.property_zpid;
+
+  Watchlist.findOneAndRemove({email: email, zpid: zpid}, function(err, doc, result) {
+    if (err) throw err;
+    console.log("Remove " + zpid + " from list!");
+    res.end();
+  });
+});
+
 router.get('/mylist', function(req, res, next){
   var user_email = checkLoggedIn(req);
   rpc_client.getWatchList(user_email, function(response) {
@@ -40,7 +52,7 @@ router.get('/mylist', function(req, res, next){
       logged_in_user: user_email
     });
   });
-})
+});
 
 router.post('/addToList', function(req, res, next){
   var email = req.body.user_email;
@@ -179,6 +191,11 @@ router.post('/login', function(req, res, next){
       if (passwordHash.verify(password, user.password)) {
         console.log(req.session);
         req.session.user = user.email;
+        rpc_client.updateWatchList(user.email, function(response) {
+          if (response == "success") {
+            console.log("Updated watchlist!!");
+          }
+        });
         res.status(202).end();
       } else {
         res.status(400).json({message: "Password invalid."});

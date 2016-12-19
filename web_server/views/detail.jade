@@ -36,7 +36,7 @@ block content
       tr
         td(style="padding-left:50px")
           if is_watched
-            a(class="waves-effect waves-light btn" id="add-to-list" disabled) Add to my list
+            a(class="waves-effect waves-light btn orange" id="delete-from-list") Delete from my list
           else
             a(class="waves-effect waves-light btn" id="add-to-list") Add to my list
       tr
@@ -70,9 +70,28 @@ block content
 
   script.
     $(document).ready(function(){
+      $('#delete-from-list').click(function(event) {
+        console.log("")
+        
+        var user_email = "#{logged_in_user}";
+        var property_zpid = "#{id}";
+        
+        $.ajax({
+          url: '/deleteFromList',
+          type: 'DELETE',
+          data: {
+            user_email: user_email,
+            property_zpid: property_zpid
+          },
+          success: function(result) {
+            Materialize.toast("Deleted from my watch list!", 4000);
+          }
+        });
+        
+        window.location.reload();
+      });
     
       $('#add-to-list').click(function(event) {
-        event.preventDefault();
         
         var user_email = "#{logged_in_user}";
         
@@ -103,6 +122,7 @@ block content
           Materialize.toast('Added to my watch list!', 4000);
         });
         
+        window.location.reload();
       });
       
       
