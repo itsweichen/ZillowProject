@@ -26,7 +26,8 @@ html
           img(alt="Smart Zillow" src="/logo.png" class="nav-logo")
         form(method="get", action="/search")
           .input-field
-            input(id="search", type="search", name="search_text", placeholder="Search", autocomplete="off", required)
+            input(id="search_text", type="search", name="search_text", placeholder="Search", autocomplete="off", required)
+            ul(class="autocomplete-content dropdown-content" id="autocomplete")
             label(for="search")
               i(class="material-icons" style="color: #26a69a") search
             i(class="material-icons") close
@@ -62,3 +63,5 @@ html
 
 
     block js_script
+    script(src='/js/autocomplete.js')
+    
