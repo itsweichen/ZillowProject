@@ -5,12 +5,12 @@ import sys
 import tensorflow as tf
 
 # Training Parameter
-LEARNING_RATE = 50
+LEARNING_RATE = 200
 
-STEPS = 5000
+STEPS = 10000
 TEST_STEPS = 10
 
-CSV_FILE_PATH = '''./sample.csv'''
+CSV_FILE_PATH = '''./1218_sample.csv'''
 CSV_FILE_FORMAT = {
     'zipcode': str,
     'longitude': np.float32,
@@ -104,3 +104,6 @@ results = linear_regressor.evaluate(input_fn=input_fn_test, steps=TEST_STEPS)
 for key in sorted(results):
     print "%s: %s" % (key, results[key])
 print "Evaluation done!"
+
+print "LEARNING_RATE", LEARNING_RATE
+print "STEPS", STEPS

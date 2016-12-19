@@ -7,14 +7,14 @@ import tensorflow as tf
 from ml_common import *
 
 # Training Parameter
-LEARNING_RATE = 50
+LEARNING_RATE = 200
 
-STEPS = 5000
+STEPS = 10000
 TEST_STEPS = 10
 
 MODEL_DIR = './model'
 
-CSV_FILE_PATH = '''../ml_research/sample.csv'''
+CSV_FILE_PATH = '''../ml_research/1218_sample.csv'''
 CSV_FILE_FORMAT = {
     'zipcode': str,
     'longitude': np.float32,
