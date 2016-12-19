@@ -79,7 +79,6 @@ block content
   script.
     $(document).ready(function(){
       $('.delete-item').click(function(event) {
-        // "#{result[0].zpid}" won't work
         var property_zpid = this.getAttribute('data-zpid');
         var user_email = "#{logged_in_user}";
         var item_dom = $(this).closest('.watchlist-item');
